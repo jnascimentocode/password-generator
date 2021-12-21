@@ -1,7 +1,7 @@
 from os import system
 from tkinter.constants import CENTER
 import PySimpleGUI as sg
-from random import choice
+import random
 
 class TelaSenha:
 
@@ -23,16 +23,26 @@ class TelaSenha:
         while True:
             event, values = self.janela.Read()
             if event == sg.WINDOW_CLOSED:
-                system('cls')
                 break
+            if event == 'Gerar Senha':
+                new_pass = self.gerar_senha(values)
+                print(f'Senha Gerada: {new_pass}')
+                self.salvar_senha(new_pass, values)
+                
 
-    def gerar_senha(self):
-        pass
+    def gerar_senha(self, values):
+        lista = 'ABCDEFGHIJKLMNOPQRSTUVXZabcdefghijklmnopqrstuvxz123456789!@#$&*'
+        chars = random.choices(lista, k=int(values['char']))
+        passwd = ''.join(chars)
+        return passwd
 
-    def salvar_senha(self):
-        pass
+    def salvar_senha(self, new_pass, values):
+        with open('senhas.txt','a', newline='') as arquivo:
+            arquivo.write(f'site: {values["site"]}, usuario: {values["usuario"]}, nova senha: {new_pass}')
+        print('Senha salva no arquivo senhas.txt.')
 
 tela = TelaSenha()
 tela.Iniciar()
+
 
 
